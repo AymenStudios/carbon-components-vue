@@ -1,0 +1,47 @@
+<template>
+  <li :class="`${carbonPrefix}--side-nav__item`">
+    <component
+      :is="tagType"
+      v-on="$listeners"
+      :class="[
+        'cv-side-nav-item-link',
+        `${carbonPrefix}--side-nav__link`,
+        { [`${carbonPrefix}--side-nav__link--current`]: active },
+      ]"
+      v-bind="{ ...$attrs, ...linkProps }"
+    >
+      <cv-side-nav-icon v-if="hasNavIcon" small>
+        <slot name="nav-icon" />
+      </cv-side-nav-icon>
+      <cv-side-nav-link-text>
+        <slot />
+      </cv-side-nav-link-text>
+    </component>
+  </li>
+</template>
+
+<script>
+import LinkMixin from '../../mixins/link-mixin';
+import CvSideNavIcon from './cv-side-nav-icon';
+import CvSideNavLinkText from './_cv-side-nav-link-text';
+import carbonPrefixMixin from '../../mixins/carbon-prefix-mixin';
+
+export default {
+  name: 'CvSideNavLink',
+  inheritAttrs: false,
+  mixins: [LinkMixin, carbonPrefixMixin],
+  components: { CvSideNavIcon, CvSideNavLinkText },
+  props: {
+    active: Boolean,
+    icon: Object,
+  },
+  data() {
+    return {
+      hasNavIcon: this.$slots['nav-icon'],
+    };
+  },
+  beforeUpdate() {
+    this.hasNavIcon = !!this.$slots['nav-icon'];
+  },
+};
+</script>
